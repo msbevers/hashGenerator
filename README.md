@@ -13,7 +13,7 @@ Initial Thoughts on What to test regarding this binary.
 Assuming that I am running this on a MAC OS laptop
 
 
-Manual Tests:
+Manual Testsm that need test cases written.:
 
 (1) Can I invoke the binary?
 (2) Does the binary run and stay running?
@@ -30,8 +30,8 @@ Manual Tests:
 (13) Are the initial stats 0? For Average time?  In Milliseconds?
 (14) If the Port is not set appropriately, what is the failure mechanism?  Error Messages?   What happens?
 (15) What if the Port is not set at all?  What is the failure mechanism?  Error Messages?  What happens?
-(16) Run the POST command to hash using the password "angrymonkey"  (Identifier returned and then 5 seconds of total time returned? Contents of file 42 contains the request number?  1st time should be 1, 2nd time 2 etc.
-(17) Run the POST command again with the same password "angrymonkey"  (Identifier returned immediately followed by 5 seconds?)  Contents of file 42?    2nd time it should be 2.
+(16) Run the POST command to hash using the password "angrymonkey"  (Request Identifier returned Immediately and then 5 seconds delay then Hash entry added?  1st time should be 1, 2nd time 2 etc.  Stats updated by 1?  Time changed?
+(17) Run the POST command again with the same password "angrymonkey"  (Request Identifier returned immediately and then followed by 5 seconds?)  Hash entry added?    2nd time it should be 2. Staus updated by 1?  Time changed?
 (18) Try password "", does it get encoded?  Error Message?  Crash?
 (19) Try password with 32 characters, 64, characters, 128 characters, 256 characters.  What is the limit?  What does the development team say?  How does it fail?  gracefully?
 (20) Come up with a way to make sure SHA512 is being used.  Is there a way to verify this? Are 64 characters (bytes) returned?  SHA512 should return 64 bytes.  Verify.
@@ -44,7 +44,117 @@ Manual Tests:
 (27) Does a Shutdown and re-invocation of the binary start the number of requests over at 0 again?  Use /stats to find out
 (28) Verify that the average-times are greated than 5 seconds, since we wait for 5 seonds before generating the hash.  Is this the desired outcome?
 
+Examples of execution:
+
+
+Initial Conditions:
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/stats; echo ""
+{"TotalRequests":0,"AverageTime":0}
+
+
+
+POST /hash
+
+curl  --noproxy '*'  -X POST -H "application/json" -d '{"password":"angrymonkey"}' http://127.0.0.1:8088/hash  
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl  --noproxy '*'  -X POST -H "application/json" -d '{"password":"angrymonkey"}' http://127.0.0.1:8088/hash
+1Moreys-MacBook-Pro:hashGenerator mbevers$ 
+
+Note that the Request Id of 1 was returned above after the 5 seconds.  See BugId 101 below
+
+
+GET stats
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/stats; echo ""
+{"TotalRequests":1,"AverageTime":300657}
+
+Note that the TotalRequests incremented by 1, but should not the average time be 5.300657 seconds or 5300657 milliseconds?  See BugID 102 below
+
+
+
+GET hash/1
+
+Moreys-MacBook-Pro:hashGenerator mbevers$  curl -H -XGET http://127.0.0.1:8088/hash/1; echo
+NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDGp74A1g==
+
+Repeatable?
+Moreys-MacBook-Pro:hashGenerator mbevers$  curl -H -XGET http://127.0.0.1:8088/hash/1; echo
+NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDGp74A1g==
+
+
+Add four more hash entries:
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl  --noproxy '*'  -X POST -H "application/json" -d '{"password":"angrymonkey"}' http://127.0.0.1:8088/hash
+2
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl  --noproxy '*'  -X POST -H "application/json" -d '{"password":"angrymonkey"}' http://127.0.0.1:8088/hash
+3
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl  --noproxy '*'  -X POST -H "application/json" -d '{"password":"angrymonkey"}' http://127.0.0.1:8088/hash
+4
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl  --noproxy '*'  -X POST -H "application/json" -d '{"password":"happymonkey"}' http://127.0.0.1:8088/hash
+5
+Moreys-MacBook-Pro:hashGenerator mbevers$ 
+
+
+GET the HASH for the five entries:
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/hash/1; echo ""
+NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDGp74A1g==
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/hash/2; echo ""
+NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDGp74A1g==
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/hash/3; echo ""
+NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDGp74A1g==
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/hash/4; echo ""
+NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDGp74A1g==
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/hash/5; echo ""
+S5/PhOdFlRaX9BbgSntGQgpW2aoJVzTou3C/zbUTQ3BqfWlimJf6aTqLfOvxdEAfQHlUiI1i3QodfZRl/k11AQ==
+
+Note that the first 4 entries returen the same hash.  They should.  Hash 5 is unique and should return a different hash.
+
+
+Are the stats updated to reflect 5 entries?
+
+
+curl -H -XGET http://127.0.0.1:8088/stats; echo ""
+{"TotalRequests":5,"AverageTime":136078}
+
+Yup.
+
+
+
+Demonstrate Shutdown:
+
+While running:
+Moreys-MacBook-Pro:hashGenerator mbevers$ ps -ef | grep darwin
+  501 53806 88661   0  3:33PM ttys000    0:00.03 ./broken-hashserve_darwin
+  501 54645 51247   0  4:42PM ttys001    0:00.00 grep darwin
+
+
+Moreys-MacBook-Pro:hashGenerator mbevers$ curl --noproxy '*' -X POST -H "application/json" -d 'shutdown' http://127.0.0.1:8088/hash; echo ""
+
+
+after execution:
+
+Moreys-MacBook-Pro:hashGenerator mbevers$  ps -ef | grep darwin
+  501 54731 51247   0  4:50PM ttys001    0:00.00 grep darwin
+Moreys-MacBook-Pro:hashGenerator mbevers$ 
+
+
+
+
+
 Bugs Identified:
-Average time < 5 seconds.  Should be more than 5 seconds?  per spec?  5 sedonds then hash generation?
+(101) Average time < 5 seconds.  Should be more than 5 seconds?  per spec?  5 sedonds then hash generation?
+(102) The Identifier is returned after the 5 seconds, not immediately per the spec.
+(103) stdout message upon shutdown misspelled. 
+  ex:
+  2019/09/17 16:50:19 Shutdown signal recieved  ("should be received")
+  2019/09/17 16:50:19 Shutting down
 
 
