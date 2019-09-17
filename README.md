@@ -8,12 +8,12 @@ Phone:   See Resume
 EmailL   morey@pobox.com
 
 
-Initial Thoughts on What to test regarding this binary.
+Initial Thoughts on What to test regarding this binary. (both positive and negative tests)
 
 Assuming that I am running this on a MAC OS laptop
 
 
-Manual Testsm that need test cases written.:
+Manual Tests that need test cases written.:
 
 (1) Can I invoke the binary?
 (2) Does the binary run and stay running?
@@ -43,6 +43,20 @@ Manual Testsm that need test cases written.:
 (26) Try a GET to /stats/1 (appending data) What happens?  Graceful?   Meaningful Message?
 (27) Does a Shutdown and re-invocation of the binary start the number of requests over at 0 again?  Use /stats to find out
 (28) Verify that the average-times are greated than 5 seconds, since we wait for 5 seonds before generating the hash.  Is this the desired outcome?
+(30) Verify that multiple connections can be supportee simultaneously:   bash script while true do curl POST a new entry done;  Run this in multiple Terminal sessions for a while (10 minutes?  1 hour?) 
+(31) Verify that a shutdown will complete any in-flight requests and will not process those received later.  Check the last hash entry for completeness
+(32) Verify that good error messages are passed for #31 above when the shutdown is processedm and the the hash table is complete.
+(33) Repeat much of the above with the -i switch in the curl command.
+(34) Repeat much of the above with the -v switch in the curl command.
+(35) Redirect the output to a file to get the curl timing chart  
+     ex:   curl  --noproxy '*'  -X POST -H "application/json" -d '{"password":"sobermonkey"}' http://127.0.0.1:8088/hash > output
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    28    0     2  100    26      0      5  0:00:05  0:00:05 --:--:--     0
+Moreys-MacBook-Pro:hashGenerator mbevers$ 
+
+
+
 
 Examples of execution:
 
