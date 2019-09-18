@@ -8,12 +8,19 @@ Phone:   See Resume
 EmailL   morey@pobox.com
 
 
+Below is a list of  Manual Tests that need test cases written.  This is the list I came up with initially.  With more time, I would flesh these out more.
+I have written up a Test Case (Test Procedure) for number 16 Below.  See the github Depot.   I assumed that you are looking for format/functionality of 
+what I thin a Test Prcedure should have.   I normally would add screenshots, test logs, screen output, test scripts etc with my recorded test results.
+
+Sane goes for a bug report.  I have included a bug report as well.  I normally would add screenshots, test logs, screen output, test scripts etc with my recorded test results.
+
+
+In addition, anything that JumpCloud requires, I would include as well.  I am sure you are using Jira and Testrails, which I have not used, but it cannot be much different that the test tools that Oracle is presenlty using.   
+
 Initial Thoughts on What to test regarding this binary. (both positive and negative tests)
 
 Assuming that I am running this on a MAC OS laptop
 
-
-Manual Tests that need test cases written.:
 
 (1) Can I invoke the binary?
 (2) Does the binary run and stay running?
