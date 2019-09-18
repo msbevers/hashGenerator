@@ -176,4 +176,6 @@ Bugs Identified:
 (106) No version id for binary supported.
 
 
+I have documented BugReport_101 above in a separate file to be added to the GIT repo.
+
 
