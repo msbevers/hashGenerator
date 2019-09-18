@@ -176,6 +176,6 @@ Bugs Identified:
 (106) No version id for binary supported.
 
 
-I have documented BugReport_101 above in a separate file to be added to the GIT repo.
-
+I have documented BugReport_101 above in a separate file to be added to the GIT repo.  This too is a report format I adopted for this exercise.  Leaves a few things to be desired, but it gets the point across.
+I have documented TC-016 from the list above as a documented test case.   I am not too happy with format I adopted, but I am sure Testrails has something more suitable.
 
