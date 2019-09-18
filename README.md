@@ -34,7 +34,7 @@ Manual Tests that need test cases written.:
 (17) Run the POST command again with the same password "angrymonkey"  (Request Identifier returned immediately and then followed by 5 seconds?)  Hash entry added?    2nd time it should be 2. Staus updated by 1?  Time changed?
 (18) Try password "", does it get encoded?  Error Message?  Crash?
 (19) Try password with 32 characters, 64, characters, 128 characters, 256 characters.  What is the limit?  What does the development team say?  How does it fail?  gracefully?
-(20) Come up with a way to make sure SHA512 is being used.  Is there a way to verify this? Are 64 characters (bytes) returned?  SHA512 should return 64 bytes.  Verify.
+(20) Come up with a way to make sure SHA512 is being used.  Is there a way to verify this? Are 64 characters (bytes) returned?  SHA512 should return 64 bytes.  Verify with https://emn178.github.io/online-tools/sha512.html?  (Possible bug?  34dd0f00ab6279aca24d8f3f41de7701e3331e46ef6437706188839f0b4376ffc5216bdccb5b0a09beea8bb36ef10f0277f32a8d07b2088d2958a0c6a7be00d6 is the answer returned which differs
 (21) With a POST of 2 passwords that are identical, AngryMonkey, can we verify that the same hash is returned?  Use the GET command for /hash/1 and /hash/2.  Should return same hash
 (22) With a GET command and invalid Identifier, what happens?  Graceful?  Meaningful Message?  Get Stats remain the same?
 (23) With a GET command and no identifier, what happens? Graceful?  Meaningful Message? Get Stats remain the same?
@@ -129,7 +129,7 @@ NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDG
 Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/hash/5; echo ""
 S5/PhOdFlRaX9BbgSntGQgpW2aoJVzTou3C/zbUTQ3BqfWlimJf6aTqLfOvxdEAfQHlUiI1i3QodfZRl/k11AQ==
 
-Note that the first 4 entries returen the same hash.  They should.  Hash 5 is unique and should return a different hash.
+Note that the first 4 entries return the same hash.  They should.  Hash 5 is unique and should return a different hash.
 
 
 Are the stats updated to reflect 5 entries?
@@ -164,11 +164,16 @@ Moreys-MacBook-Pro:hashGenerator mbevers$
 
 
 Bugs Identified:
-(101) Average time < 5 seconds.  Should be more than 5 seconds?  per spec?  5 sedonds then hash generation?
+(101) Average time < 5 seconds.  Should be more than 5 seconds?  per spec?  5 seconds then hash generation?
 (102) The Identifier is returned after the 5 seconds, not immediately per the spec.
 (103) stdout message upon shutdown misspelled. 
   ex:
   2019/09/17 16:50:19 Shutdown signal recieved  ("should be received")
   2019/09/17 16:50:19 Shutting down
+(104) SHA512 result not correct?  34dd0f00ab6279aca24d8f3f41de7701e3331e46ef6437706188839f0b4376ffc5216bdccb5b0a09beea8bb36ef10f0277f32a8d07b2088d2958a0c6a7be00d6 returned via alternate source.
+  vs NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDGp74A1g== by binary.  A secondary site returns 34DD0F00AB6279ACA24D8F3F41DE7701E3331E46EF6437706188839F0B4376FFC5216BDCCB5B0A09BEEA8BB36EF10F0277F32A8D07B2088D2958A0C6A7BE00D6, same as the first site, but different than the binary.  See https://passwordsgenerator.net/sha512-hash-generator/   Pretty sure there is a bug in the generation of our SHA512 Hash
+(105) No usage info when invoking binary with -v, -h, -?.
+(106) No version id for binary supported.
+
 
 
