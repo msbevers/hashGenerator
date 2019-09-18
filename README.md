@@ -8,18 +8,17 @@ Phone:   See Resume
 EmailL   morey@pobox.com
 
 
-Below is a list of  Manual Tests that need test cases written.  This is the list I came up with initially.  With more time, I would flesh these out more.
-I have written up a Test Case (Test Procedure) for number 16 Below.  See the github Depot.   I assumed that you are looking for format/functionality of 
-what I thin a Test Prcedure should have.   I normally would add screenshots, test logs, screen output, test scripts etc with my recorded test results.
+Below is a list of Manual Tests that I was able to come up with initially.  With more time, I would flesh these out more.
+I have written up a Test Case (Test Procedure) for number 16 below as a representative example of what I think is needed in a test procedure that has been run..   I assumed that you are looking for formatand functionality and that you were not so interested in my writing up test procedures for all of the below on the list.
 
-Sane goes for a bug report.  I have included a bug report as well.  I normally would add screenshots, test logs, screen output, test scripts etc with my recorded test results.
+In create test casesm I normally would include example screenshots, example screen output, any test scripts, or commands needed in order to make the test procedure easier to run.   In the event that the binary is not yet avaialble, I would work with development or make some assumptions and point the test engineer in the right direction.
 
+A completed test procedure (executed) would normally include screenshots of actual results where applicable, screen output, test log or trace output,  etc with my recorded test results and a clear indication of PASS vs. FAIL and in the event of a failure, the BugID associated with the failure.
 
-In addition, anything that JumpCloud requires, I would include as well.  I am sure you are using Jira and Testrails, which I have not used, but it cannot be much different that the test tools that Oracle is presenlty using.   
+The same goes for a bug report.  I have included a representative eug report in the repo as well.  I normally would add screenshots, test logs, screen output, test scripts etc with my recorded test results. 
+In addition, anything that JumpCloud requires, I would include as well.  I am sure you are using Jira and Testrails, which I have not used, but it cannot be much different that the test tools that Oracle is presenlty using.   The tools are secondary to how one utilizes them.
 
 Initial Thoughts on What to test regarding this binary. (both positive and negative tests)
-
-Assuming that I am running this on a MAC OS laptop
 
 
 (1) Can I invoke the binary?
@@ -50,7 +49,7 @@ Assuming that I am running this on a MAC OS laptop
 (26) Try a GET to /stats/1 (appending data) What happens?  Graceful?   Meaningful Message?
 (27) Does a Shutdown and re-invocation of the binary start the number of requests over at 0 again?  Use /stats to find out
 (28) Verify that the average-times are greated than 5 seconds, since we wait for 5 seonds before generating the hash.  Is this the desired outcome?
-(30) Verify that multiple connections can be supportee simultaneously:   bash script while true do curl POST a new entry done;  Run this in multiple Terminal sessions for a while (10 minutes?  1 hour?) 
+(30) Verify that multiple connections can be supported simultaneously:   bash script while true do curl POST a new entry done;  Run this in multiple Terminal sessions for a while (10 minutes?  1 hour?) 
 (31) Verify that a shutdown will complete any in-flight requests and will not process those received later.  Check the last hash entry for completeness
 (32) Verify that good error messages are passed for #31 above when the shutdown is processedm and the the hash table is complete.
 (33) Repeat much of the above with the -i switch in the curl command.
@@ -65,7 +64,7 @@ Moreys-MacBook-Pro:hashGenerator mbevers$
 
 
 
-Examples of execution:
+Examples of execution I ran yesterday:
 
 
 Initial Conditions:
@@ -73,7 +72,7 @@ Initial Conditions:
 Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/stats; echo ""
 {"TotalRequests":0,"AverageTime":0}
 
-
+================
 
 POST /hash
 
@@ -85,6 +84,9 @@ Moreys-MacBook-Pro:hashGenerator mbevers$ curl  --noproxy '*'  -X POST -H "appli
 Note that the Request Id of 1 was returned above after the 5 seconds.  See BugId 101 below
 
 
+================
+
+
 GET stats
 
 Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/stats; echo ""
@@ -92,6 +94,9 @@ Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/st
 
 Note that the TotalRequests incremented by 1, but should not the average time be 5.300657 seconds or 5300657 milliseconds?  See BugID 102 below
 
+
+
+================
 
 
 GET hash/1
@@ -102,6 +107,12 @@ NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDG
 Repeatable?
 Moreys-MacBook-Pro:hashGenerator mbevers$  curl -H -XGET http://127.0.0.1:8088/hash/1; echo
 NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDGp74A1g==
+
+
+
+
+================
+
 
 
 Add four more hash entries:
@@ -119,7 +130,10 @@ Moreys-MacBook-Pro:hashGenerator mbevers$ curl  --noproxy '*'  -X POST -H "appli
 Moreys-MacBook-Pro:hashGenerator mbevers$ 
 
 
-GET the HASH for the five entries:
+================
+
+
+GET the HASH for the five new entries:
 
 Moreys-MacBook-Pro:hashGenerator mbevers$ curl -H -XGET http://127.0.0.1:8088/hash/1; echo ""
 NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDGp74A1g==
@@ -139,6 +153,12 @@ S5/PhOdFlRaX9BbgSntGQgpW2aoJVzTou3C/zbUTQ3BqfWlimJf6aTqLfOvxdEAfQHlUiI1i3QodfZRl
 Note that the first 4 entries return the same hash.  They should.  Hash 5 is unique and should return a different hash.
 
 
+
+================
+
+
+
+
 Are the stats updated to reflect 5 entries?
 
 
@@ -148,6 +168,7 @@ curl -H -XGET http://127.0.0.1:8088/stats; echo ""
 Yup.
 
 
+================
 
 Demonstrate Shutdown:
 
@@ -169,10 +190,13 @@ Moreys-MacBook-Pro:hashGenerator mbevers$
 
 
 
+================
 
-Bugs Identified:
-(101) Average time < 5 seconds.  Should be more than 5 seconds?  per spec?  5 seconds then hash generation?
-(102) The Identifier is returned after the 5 seconds, not immediately per the spec.
+Bugs Identified during the execution:  (Note each of these would be detailed in a Bug Report and the ID added to the Test Procedure executed that exhibited the issue.
+
+
+(101) The Identifier is returned after the 5 seconds, not immediately per the spec and before the 5 second delay
+(102) Average time Reported by Stats is less than 5 seconds.  Should it be more than 5 seconds?  per spec?  5 seconds then hash generation?  Would need to consult with Dev on this one. May not be a bug.
 (103) stdout message upon shutdown misspelled. 
   ex:
   2019/09/17 16:50:19 Shutdown signal recieved  ("should be received")
@@ -180,9 +204,9 @@ Bugs Identified:
 (104) SHA512 result not correct?  34dd0f00ab6279aca24d8f3f41de7701e3331e46ef6437706188839f0b4376ffc5216bdccb5b0a09beea8bb36ef10f0277f32a8d07b2088d2958a0c6a7be00d6 returned via alternate source.
   vs NN0PAKtieayiTY8/Qd53AeMzHkbvZDdwYYiDnwtDdv/FIWvcy1sKCb7qi7Nu8Q8Cd/MqjQeyCI0pWKDGp74A1g== by binary.  A secondary site returns 34DD0F00AB6279ACA24D8F3F41DE7701E3331E46EF6437706188839F0B4376FFC5216BDCCB5B0A09BEEA8BB36EF10F0277F32A8D07B2088D2958A0C6A7BE00D6, same as the first site, but different than the binary.  See https://passwordsgenerator.net/sha512-hash-generator/   Pretty sure there is a bug in the generation of our SHA512 Hash
 (105) No usage info when invoking binary with -v, -h, -?.
-(106) No version id for binary supported.
+(106) No version id for binary supported reported by the binary itself.
 
 
-I have documented BugReport_101 above in a separate file to be added to the GIT repo.  This too is a report format I adopted for this exercise.  Leaves a few things to be desired, but it gets the point across.
-I have documented TC-016 from the list above as a documented test case.   I am not too happy with format I adopted, but I am sure Testrails has something more suitable.
+I have documented BugReport_101 above in a separate file to be added to the GIT repo.  This is a report format I adopted from the web for this exercise.  Leaves a few things to be desired, but it gets the point across.
+I have documented TC-016 from the list above as a documented test case.   I am not too happy with format I adopted from the web, but I am sure Testrails has something more suitable.
 
