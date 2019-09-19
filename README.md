@@ -41,6 +41,8 @@ Initial Thoughts on What to test regarding this binary. (both positive and negat
 (18) Try password "", does it get encoded?  Error Message?  Crash?
 (19) Try password with 32 characters, 64, characters, 128 characters, 256 characters.  What is the limit?  What does the development team say?  How does it fail?  gracefully?
 (20) Come up with a way to make sure SHA512 is being used.  Is there a way to verify this? Are 64 characters (bytes) returned?  SHA512 should return 64 bytes.  Verify with https://emn178.github.io/online-tools/sha512.html?  (Possible bug?  34dd0f00ab6279aca24d8f3f41de7701e3331e46ef6437706188839f0b4376ffc5216bdccb5b0a09beea8bb36ef10f0277f32a8d07b2088d2958a0c6a7be00d6 is the answer returned which differs
+Verifying with a second source for SHA512 hash.  It also differs.  See https://passwordsgenerator.net/sha512-hash-generator/.  Note these 2 sources agree but our hash generator binary does not.  Needs a bug.
+
 (21) With a POST of 2 passwords that are identical, AngryMonkey, can we verify that the same hash is returned?  Use the GET command for /hash/1 and /hash/2.  Should return same hash
 (22) With a GET command and invalid Identifier, what happens?  Graceful?  Meaningful Message?  Get Stats remain the same?
 (23) With a GET command and no identifier, what happens? Graceful?  Meaningful Message? Get Stats remain the same?
