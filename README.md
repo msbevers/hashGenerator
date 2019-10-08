@@ -11,7 +11,7 @@ EmailL   morey@pobox.com
 Below is a list of Manual Tests that I was able to come up with initially.  With more time, I would flesh these out more.
 I have written up a Test Case (Test Procedure) for number 16 below as a representative example of what I think is needed in a test procedure that has been run..   I assumed that you are looking for formatand functionality and that you were not so interested in my writing up test procedures for all of the below on the list.
 
-In create test casesm I normally would include example screenshots, example screen output, any test scripts, or commands needed in order to make the test procedure easier to run.   In the event that the binary is not yet avaialble, I would work with development or make some assumptions and point the test engineer in the right direction.
+In creation of test cases I normally would include example screenshots, example screen output, any test scripts, or commands needed in order to make the test procedure easier to run.   In the event that the binary is not yet avaialble, I would work with development or make some assumptions and point the test engineer in the right direction.
 
 A completed test procedure (executed) would normally include screenshots of actual results where applicable, screen output, test log or trace output,  etc with my recorded test results and a clear indication of PASS vs. FAIL and in the event of a failure, the BugID associated with the failure.
 
@@ -37,7 +37,7 @@ Initial Thoughts on What to test regarding this binary. (both positive and negat
 (14) If the Port is not set appropriately, what is the failure mechanism?  Error Messages?   What happens?
 (15) What if the Port is not set at all?  What is the failure mechanism?  Error Messages?  What happens?
 (16) Run the POST command to hash using the password "angrymonkey"  (Request Identifier returned Immediately and then 5 seconds delay then Hash entry added?  1st time should be 1, 2nd time 2 etc.  Stats updated by 1?  Time changed?
-(17) Run the POST command again with the same password "angrymonkey"  (Request Identifier returned immediately and then followed by 5 seconds?)  Hash entry added?    2nd time it should be 2. Staus updated by 1?  Time changed?
+(17) Run the POST command again with the same password "angrymonkey"  (Request Identifier returned immediately and then followed by 5 seconds?)  Hash entry added?    2nd time it should be 2. Status updated by 1?  Time changed?
 (18) Try password "", does it get encoded?  Error Message?  Crash?
 (19) Try password with 32 characters, 64, characters, 128 characters, 256 characters.  What is the limit?  What does the development team say?  How does it fail?  gracefully?
 (20) Come up with a way to make sure SHA512 is being used.  Is there a way to verify this? Are 64 characters (bytes) returned?  SHA512 should return 64 bytes.  Verify with https://emn178.github.io/online-tools/sha512.html?  (Possible bug?  34dd0f00ab6279aca24d8f3f41de7701e3331e46ef6437706188839f0b4376ffc5216bdccb5b0a09beea8bb36ef10f0277f32a8d07b2088d2958a0c6a7be00d6 is the answer returned which differs
@@ -53,7 +53,7 @@ Verifying with a second source for SHA512 hash.  It also differs.  See https://p
 (28) Verify that the average-times are greated than 5 seconds, since we wait for 5 seonds before generating the hash.  Is this the desired outcome?
 (30) Verify that multiple connections can be supported simultaneously:   bash script while true do curl POST a new entry done;  Run this in multiple Terminal sessions for a while (10 minutes?  1 hour?) 
 (31) Verify that a shutdown will complete any in-flight requests and will not process those received later.  Check the last hash entry for completeness
-(32) Verify that good error messages are passed for #31 above when the shutdown is processedm and the the hash table is complete.
+(32) Verify that good error messages are passed for #31 above when the shutdown is processed and that the hash table is complete.
 (33) Repeat much of the above with the -i switch in the curl command.
 (34) Repeat much of the above with the -v switch in the curl command.
 (35) Redirect the output to a file to get the curl timing chart  
@@ -66,7 +66,7 @@ Moreys-MacBook-Pro:hashGenerator mbevers$
 
 
 
-Examples of execution I ran yesterday:
+Examples of execution I have run while working on tnis exercise:
 
 
 Initial Conditions:
